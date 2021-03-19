@@ -1,9 +1,8 @@
 import * as express from 'express';
+import todosRouter from './todos';
 
 const router = express.Router();
 
-router.get('/api/hello', (req, res, next) => {
-    res.json('World');
-});
+router.use('/todos', todosRouter);
 
 export default router;
