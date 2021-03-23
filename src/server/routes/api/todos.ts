@@ -1,11 +1,13 @@
 import * as express from 'express';
+import db from '../../db';
 
 const router = express.Router();
 
 router.get('/:todoid', async (req, res) => {
     const todoid = Number(req.params.todoid);
 	try {
-		res.json({ msg: 'single todo by id ' + todoid });
+		const todoDetails = await db.todos.one(todoid);
+		res.json(todoDetails[0]);
 	} catch (error) {
 		console.log(error);
 		res.status(500).json({ msg: 'my code sucks, let me know lol!', error: error.message });
@@ -14,7 +16,8 @@ router.get('/:todoid', async (req, res) => {
 
 router.get('/', async (req, res) => {
 	try {
-		res.json({ msg: 'all todos' });
+		const allTodos = await db.todos.all();
+		res.json(allTodos);
 	} catch (error) {
 		console.log(error);
 		res.status(500).json({ msg: 'my code sucks, let me know lol!', error: error.message });
@@ -24,7 +27,8 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
     const newTodo = req.body;
 	try {
-		res.json({ msg: 'added new todo', ...newTodo });
+		const result = await db.todos.insert(newTodo);
+		res.json(result);
 	} catch (error) {
 		console.log(error);
 		res.status(500).json({ msg: 'my code sucks, let me know lol!', error: error.message });
@@ -35,7 +39,8 @@ router.put('/:todoid', async (req, res) => {
     const todoid = Number(req.params.todoid);
     const editedTodo = req.body;
 	try {
-		res.json({ msg: 'single todo by id ' + todoid, ...editedTodo });
+		const result = await db.todos.update(editedTodo, todoid);
+		res.json(result);
 	} catch (error) {
 		console.log(error);
 		res.status(500).json({ msg: 'my code sucks, let me know lol!', error: error.message });
@@ -45,7 +50,8 @@ router.put('/:todoid', async (req, res) => {
 router.delete('/:todoid', async (req, res) => {
     const todoid = Number(req.params.todoid);
 	try {
-		res.json({ msg: 'destroyed todo by id ' + todoid });
+		const result = await db.todos.destroy(todoid);
+		res.json(result);
 	} catch (error) {
 		console.log(error);
 		res.status(500).json({ msg: 'my code sucks, let me know lol!', error: error.message });

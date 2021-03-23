@@ -36,3 +36,7 @@ CREATE TABLE todos_tags (
     FOREIGN KEY (todoid) REFERENCES todos (id) ON DELETE CASCADE,
     FOREIGN KEY (tagid) REFERENCES tags (id) ON DELETE CASCADE
 );
+
+CREATE USER 'todos_app'@'localhost' IDENTIFIED WITH mysql_native_password BY 'todos_app';
+GRANT ALL PRIVILEGES ON todos_app.* TO 'todos_app'@'localhost';
+FLUSH PRIVILEGES;
